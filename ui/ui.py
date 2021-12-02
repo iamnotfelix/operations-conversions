@@ -18,7 +18,7 @@ class UI:
         print("\nEnter a command:")
         print("conversions\tGo to conversions menu.")
         print("operations\tGo to operations menu.")
-        print("\nexit\tExit the application.")
+        print("\nexit\tExit the application.\n")
 
     @staticmethod
     def print_conversions_menu():
@@ -28,7 +28,8 @@ class UI:
         print("3\tConvert using 10 as intermediate base.")
         print("4\tConvert using rapid conversions(only between bases: 2, 4, 8, 16).")
         print("\nhelp\tDisplay this menu.")
-        print("back\tGo back to main menu.\n")
+        print("back\tGo back to main menu.")
+        print("exit\tExit the application.\n")
 
     @staticmethod
     def print_operations_menu():
@@ -38,7 +39,8 @@ class UI:
         print("mul\tMultiply two numbers(multiply by one digit).")      
         print("div\tDivide two numbers(divide by one digit).")
         print("\nhelp\tDisplay this menu.")
-        print("back\tGo back to main menu.\n")
+        print("back\tGo back to main menu.")
+        print("exit\tExit the application.\n")
 
 
     """
@@ -74,6 +76,24 @@ class UI:
         self.__validator.validte_rapid_base(destination_base)
 
         return source_base, number, destination_base
+    
+    def get_operation_input(self):
+        base = input("Enter the base: ")
+        self.__validator.validate_base(base)
+
+        num1 = input(f"Enter a value for x: ")
+        self.__validator.validate_number(base, num1)
+
+        num2 = input(f"Enter a value for y: ")
+        self.__validator.validate_number(base, num2)
+
+        return base, num1, num2
+
+    def operation(self, operation, operation_func):
+        print(f"x {operation} y = ?")
+        data = self.get_operation_input()
+        result = operation_func(*data)
+        print(f"{data[2]} + {data[1]} = {result}")
 
     """
         Menu handlers
@@ -102,6 +122,8 @@ class UI:
             try:
                 if command == "back":
                     return
+                elif command == "exit":
+                    exit()
                 elif command == "help":
                     self.print_conversions_menu()
                 elif command == "1":    # Successive division method
@@ -128,16 +150,18 @@ class UI:
             try:
                 if command == "back":
                     return
+                elif command == "exit":
+                    exit()
                 elif command == "help":
                     self.print_operations_menu()
                 elif command == "add":
-                    print(command)
+                    self.operation("+", self.__operations.add)
                 elif command == "sub":
-                    print(command)
+                    self.operation("-", self.__operations.substract)
                 elif command == "mul":
-                    print(command)
+                    self.operation("*", self.__operations.multiply)
                 elif command == "div":
-                    print(command)
+                    self.operation("/", self.__operations.divide)
                 else:
                     raise Exception("Invalid command!")
             except Exception as ex:
@@ -154,3 +178,4 @@ class UI:
             self.main_command_handler()
 
 # todo: provide in the menu the bases that can be used and other info
+# todo: add exit to all menu
