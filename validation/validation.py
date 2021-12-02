@@ -7,12 +7,15 @@ class Validation:
     
     @staticmethod
     def validate_base(base):
+        err = ""
         try:
             base = int(base)
             if base < 2 or base > 16:
-                raise ValueError("Base has to be between 2 and 16!")
+                err += "Base has to be between 2 and 16!"
         except ValueError as ve:
             raise ValueError("Base must be a number!")
+        if len(err):
+            raise ValueError(err)
     
     @staticmethod
     def validate_number(base, number):
@@ -29,9 +32,12 @@ class Validation:
     
     @staticmethod
     def validate_rapid_base(base):
+        err = ""
         try:
             base = int(base)
             if not (base == 2 or base == 4 or base == 8 or base == 16):
-                raise ValueError("Base must be 2, 4, 8 or 16!")
+                err += "Base must be 2, 4, 8 or 16!"
         except ValueError as ve:
             raise ValueError("Base must be a number!")
+        if len(err):
+            raise ValueError(err)
