@@ -89,11 +89,11 @@ class UI:
 
         return base, num1, num2
 
-    def operation(self, operation, operation_func):
-        print(f"x {operation} y = ?")
+    def operation(self, operator, operation_func):
+        print(f"x {operator} y = ?")
         data = self.get_operation_input()
         result = operation_func(*data)
-        print(f"{data[2]} + {data[1]} = {result}")
+        print(f"{data[1]} {operator} {data[2]} = {result}")
 
     """
         Menu handlers
