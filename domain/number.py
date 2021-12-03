@@ -4,7 +4,7 @@ class Number:
 
     def __init__(self, base, value) -> None:
         self.__base = base
-        self.__value = value.lower()
+        self.__value = value
         self.__digit_list = self.create_digit_list()
 
     @property
@@ -13,7 +13,7 @@ class Number:
 
     @property
     def value(self):
-        return self.__value
+        return self.__value.upper()
     
     @property
     def digit_list(self):
@@ -24,6 +24,9 @@ class Number:
     
     def __getitem__(self, i):
         return self.digit_list[i]
+
+    def __eq__(self, other):
+        return self.__value.upper() == other.value and self.__base == other.base
 
     def create_digit_list(self):
         self.__value = self.__value.lower()

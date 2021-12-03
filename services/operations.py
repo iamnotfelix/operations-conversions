@@ -27,7 +27,9 @@ class Operations:
         if carry:
             result.append(carry)
         
-        return Number.create_value(result)
+        value = Number.create_value(result)
+        result = Number(base, value)
+        return result
 
     def substract(self, base, num1, num2):
         borrow = 0
@@ -48,8 +50,9 @@ class Operations:
                 borrow = 0
                 result.append(sub)
         
-        return Number.create_value(result)
-
+        result = Number.create_value(result)
+        result = Number(base, result)
+        return result
 
     def multiply(self, base, num1, num2):
         carry = 0
@@ -71,7 +74,9 @@ class Operations:
         if carry:
             result.append(carry)
         
-        return Number.create_value(result)
+        result = Number.create_value(result)
+        result = Number(base, result)
+        return result
 
     def divide(self, base, num1, num2):
         borrow = 0
@@ -85,6 +90,9 @@ class Operations:
             borrow = div % num2[0]
             result.append(div // num2[0])
 
-        return f"{Number.create_value(result, False)}    r: {borrow}"
+        result = Number.create_value(result, False)
+        result = Number(base, result)
+        return result, borrow
+        # return f"{Number.create_value(result, False)}    r: {borrow}"
 
 # todo: make a validation for substraction that ensures that the second number is smaller than the first one?

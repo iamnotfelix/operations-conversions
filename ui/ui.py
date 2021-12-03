@@ -93,7 +93,11 @@ class UI:
         print(f"x {operator} y = ?")
         data = self.get_operation_input()
         result = operation_func(*data)
-        print(f"{data[1]} {operator} {data[2]} = {result}")
+        if isinstance(result, tuple):
+            result, borrow = result[0], result[1]
+            print(f"{data[1]} {operator} {data[2]} = {result.value}    r: {borrow}")
+        else:
+            print(f"{data[1]} {operator} {data[2]} = {result.value}")
 
     """
         Menu handlers
@@ -178,4 +182,3 @@ class UI:
             self.main_command_handler()
 
 # todo: provide in the menu the bases that can be used and other info
-# todo: add exit to all menu
