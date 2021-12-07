@@ -15,6 +15,9 @@ class Conversions:
         number = Number(source_base, number)
         result = list()
 
+        if destination_base == "10":
+            destination_base = "A"
+
         while number.value != "0":
             number, remainder = self.__operations.divide(number.base, number.value, destination_base)
             result.append(remainder)
@@ -27,6 +30,10 @@ class Conversions:
 
         number = Number(source_base, number)
         result = "0"
+
+        if source_base == "10":
+            source_base = "A"
+
         for i in range(0, len(number)):
             base_multiplier = "1"
             for j in range(0, i):
@@ -42,12 +49,18 @@ class Conversions:
         return result
 
     def intermediate_base_method(self, source_base, number, destination_base):
-        if int(destination_base) > 10:
-            pass
+        result = number
+        if int(source_base) > 10:
             result = self.successive_division_method(source_base, number, "10")
-            pass
-        else:
-            pass
+        elif int(source_base) < 10:
+            result = self.substitution_method(source_base, number, "10")
+
+        if int(destination_base) > 10:
+            result = self.substitution_method("10", result, destination_base)
+        elif int(destination_base) < 10:
+            result = self.successive_division_method("10", result, destination_base)
+        
+        return result
 
     def rapid_conversion_method(self, source_base, number, destination_base):
         base_2 = { "0000": "0", "0001": "1", "0010": "2", "0011": "3", "0100": "4", "0101": "5", "0110": "6", "0111": "7", 
@@ -77,10 +90,3 @@ class Conversions:
         result = result[::-1]
         result = result.lstrip("0")
         return result
-
-
-# todo: source_base has to be lower than the destination base for successive division
-# the successive_division does not work with two bases that are both over 10. so i need to implement that?
-# no!!!!
-# conversions of natural numbers between two bases p,q{2,3,...,9,10,16} using the substitution method 
-#                   or successive divisions and rapid conversions between two bases p,q{2, 4, 8, 16}.
