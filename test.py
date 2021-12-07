@@ -238,7 +238,23 @@ class ConversionsTest:
         assert self.conversions.substitution_method("2", "1100100100011000101", "6") == "12454405"
 
     def test_intermediate_base_method(self):
-        pass
+        assert self.conversions.intermediate_base_method("2", "10000001101100", "8") == "20154"
+        assert self.conversions.intermediate_base_method("4", "3210", "9") == "273"
+        assert self.conversions.intermediate_base_method("5", "1234", "16") == "C2"
+        assert self.conversions.intermediate_base_method("7", "16663", "10") == "4798"
+        assert self.conversions.intermediate_base_method("2", "1100100100011000101", "10") == "411845"
+        assert self.conversions.intermediate_base_method("6", "1100100100011000101", "10") == "118565343400933"
+        assert self.conversions.intermediate_base_method("2", "1100100100011000101", "6") == "12454405"
+        assert self.conversions.intermediate_base_method("8","1234567", "16") == "53977"
+        assert self.conversions.intermediate_base_method("16","abc123fd", "8") == "25360221775"
+        assert self.conversions.intermediate_base_method("2", "10000001101100", "2") == "10000001101100"
+        assert self.conversions.intermediate_base_method("2", "10000001101100", "4") == "2001230"
+        assert self.conversions.intermediate_base_method("4", "32112311123123312313133212311231", "16") == "E5B56DBDB77E6D6D"
+        assert self.conversions.intermediate_base_method("8", "11024", "2") == "1001000010100"
+        assert self.conversions.intermediate_base_method("16", "BCF13F", "2") == "101111001111000100111111"
+        assert self.conversions.intermediate_base_method("2", "10000001101100", "2") == "10000001101100"
+        assert self.conversions.intermediate_base_method("13", "ABc12", "5") == "34434240"
+        assert self.conversions.intermediate_base_method("14", "ABc12", "4") == "1211233020"
 
     def test_rapid_conversion_method(self):
         assert self.conversions.rapid_conversion_method("8","1234567", "16") == "53977"
