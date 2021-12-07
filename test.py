@@ -1,5 +1,6 @@
 
 from domain.number import Number
+from services.conversions import Conversions
 from services.operations import Operations
 from validation.validation import Validation
 
@@ -24,6 +25,26 @@ class NumberTest:
 
         number = Number("16", "FABCDE12")
         assert number.__eq__(Number("16", "FABCDE12"))
+
+    @staticmethod
+    def test_greater():
+        num1 = Number("10", "1234")
+        num2 = Number("10", "123")
+
+        assert Number.greater(num1, num2)
+        assert not Number.greater(num2, num1)
+
+        num2 = Number("10", "1234")
+        assert not Number.greater(num1, num2)
+        assert not Number.greater(num2, num1)
+
+        num2 = Number("10", "1235")
+        assert Number.greater(num2, num1)
+        assert not Number.greater(num1, num2)
+
+        num1 = Number("10", "1400")
+        assert Number.greater(num1, num2)
+        assert not Number.greater(num2, num1)
     
     @staticmethod
     def test_create_value():
@@ -37,6 +58,7 @@ class NumberTest:
         self.test_create_digit_list()
         self.test_eq()
         self.test_create_value()
+        self.test_greater()
 
 class ValidationTest:
 
@@ -54,13 +76,13 @@ class ValidationTest:
             self.validator.validate_base("17")
             assert False
         except ValueError as ve:
-            assert str(ve) == "Base has to be between 2 and 16!"
+            assert str(ve) == "Base has to be between 2 and 10 or 16!"
 
         try:
             self.validator.validate_base("1")
             assert False
         except ValueError as ve:
-            assert str(ve) == "Base has to be between 2 and 16!"
+            assert str(ve) == "Base has to be between 2 and 10 or 16!"
 
     def test_validate_number(self):
         try:
@@ -115,6 +137,12 @@ class OperationsTest:
         assert self.operations.add(12, "Ab23", "A45").value == "B968"
 
     def test_substract(self):
+        try:
+            self.operations.substract(10, "100", "101")
+            assert False
+        except Exception as ex:
+            assert str(ex) == "X has to be greater or equal than Y!"
+
         assert self.operations.substract(2, "10001100010", "1110111011").value == "10100111" 
         assert self.operations.substract(9, "102387", "64502").value == "26785"
         assert self.operations.substract(16, "501BA", "32Ed").value == "4CECD"
@@ -131,34 +159,35 @@ class OperationsTest:
         assert self.operations.multiply(4, "31203", "3").value == "220221"
 
     def test_divide(self):
-        result, borrow = self.operations.divide(3, "20101", "2")
+        try:
+            self.operations.divide(8, "1234", "0")
+            assert False
+        except Exception as ex:
+            assert str(ex) == "Can not divide by 0!"
+
+        result, remainder = self.operations.divide(3, "20101", "2")
         assert  result.__eq__(Number(3, "10012"))
-        assert borrow == 0
+        assert remainder == 0
 
-        result, borrow = self.operations.divide(16, "1fed0205", "9")
+        result, remainder = self.operations.divide(16, "1fed0205", "9")
         assert result.__eq__(Number(16, "38C1CAB"))
-        assert borrow == 2
-        # assert self.operations.divide(16, "1fed0205", "9") == "38C1CAB    r: 2"
+        assert remainder == 2
 
-        result, borrow = self.operations.divide(8, "120456", "6")
+        result, remainder = self.operations.divide(8, "120456", "6")
         assert result.__eq__(Number(8, "15335"))
-        assert borrow == 0
-        # assert self.operations.divide(8, "120456", "6") == "15335    r: 0"
+        assert remainder == 0
 
-        result, borrow = self.operations.divide(7, "120456", "6")
+        result, remainder = self.operations.divide(7, "120456", "6")
         assert result.__eq__(Number(7, "13421"))
-        assert borrow == 0
-        # assert self.operations.divide(7, "120456", "6") == "13421    r: 0"
+        assert remainder == 0
 
-        result, borrow = self.operations.divide(5, "321023", "3")
+        result, remainder = self.operations.divide(5, "321023", "3")
         assert result.__eq__(Number(5, "103322"))
-        assert borrow == 2
-        # assert self.operations.divide(5, "321023", "3") == "103322    r: 2"
+        assert remainder == 2
 
-        result, borrow = self.operations.divide(4, "321023", "3")
+        result, remainder = self.operations.divide(4, "321023", "3")
         assert result.__eq__(Number(4, "103003"))
-        assert borrow == 2
-        # assert self.operations.divide(4, "321023", "3") == "103003    r: 2"
+        assert remainder == 2
 
     def tests_handler(self):
         self.test_add()
@@ -167,12 +196,62 @@ class OperationsTest:
         self.test_divide()
 
 
+class ConversionsTest:
+
+    def __init__(self) -> None:
+        self.operations = Operations()
+        self.conversions = Conversions(self.operations)
+
+    def test_successive_division_method(self):
+        try:
+            self.conversions.successive_division_method("2","1001010","8")
+            assert False
+        except Exception as ex:
+            assert str(ex) == "For the successive division method the source base must be greater than the destination base!"
+
+        assert self.conversions.successive_division_method("8", "11024", "2") == "1001000010100"
+        assert self.conversions.successive_division_method("16", "BCF13F", "2") == "101111001111000100111111"
+        assert self.conversions.successive_division_method("2", "10000001101100", "2") == "10000001101100"
+        assert self.conversions.successive_division_method("13", "ABc12", "5") == "34434240"
+        assert self.conversions.successive_division_method("14", "ABc12", "4") == "1211233020"
+
+    def test_substitution_method(self):
+        try:
+            self.conversions.substitution_method("8", "11234","2")
+            assert False
+        except Exception as ex:
+            assert str(ex) == "For the substitution method the source base must be lower than the destination base!"
+        assert self.conversions.substitution_method("2", "10000001101100", "8") == "20154"
+        assert self.conversions.substitution_method("4", "3210", "9") == "273"
+        assert self.conversions.substitution_method("5", "1234", "16") == "C2"
+        assert self.conversions.substitution_method("7", "16663", "10") == "4798"
+        assert self.conversions.substitution_method("2", "1100100100011000101", "10") == "411845"
+        assert self.conversions.substitution_method("6", "1100100100011000101", "10") == "118565343400933"
+        assert self.conversions.substitution_method("2", "1100100100011000101", "6") == "12454405"
+
+    def test_intermediate_base_method(self):
+        pass
+
+    def test_rapid_conversion_method(self):
+        pass
+
+    def test_handler(self):
+        self.test_successive_division_method()
+        self.test_substitution_method()
+        self.test_intermediate_base_method()
+        self.test_rapid_conversion_method()
+
 if __name__ == "__main__":
 
     number_test = NumberTest()
     validation_test = ValidationTest()
     operations_test = OperationsTest()
+    conversions_test = ConversionsTest()
 
     number_test.test_handler()
     validation_test.tests_handler()
     operations_test.tests_handler()
+    conversions_test.test_handler()
+
+
+# todo: when converting from base ten or to base ten, there are error because of the multiplication or division by 10 (more than one digit)
