@@ -10,8 +10,8 @@ class Validation:
         err = ""
         try:
             base = int(base)
-            if base < 2 or base > 16:
-                err += "Base has to be between 2 and 16!"
+            if (base < 2 or base > 10) and base != 16:
+                err += "Base has to be between 2 and 10 or 16!"
         except ValueError as ve:
             raise ValueError("Base must be a number!")
         if len(err):

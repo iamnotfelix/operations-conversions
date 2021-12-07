@@ -28,6 +28,21 @@ class Number:
     def __eq__(self, other):
         return self.__value.upper() == other.value and self.__base == other.base
 
+    @staticmethod
+    def greater(num1, num2):
+        if len(num1) < len(num2):
+            return False
+        if len(num1) > len(num2):
+            return True
+
+        for i in reversed(range(0, len(num1))):
+            if num1[i] < num2[i]:
+                return False
+            if num1[i] > num2[i]:
+                return True
+        
+        return False
+
     def create_digit_list(self):
         self.__value = self.__value.lower()
         digit_list = list()
@@ -35,7 +50,7 @@ class Number:
             try:
                 digit = int(digit)
             except ValueError:
-                digit = ord(digit) - 87         # ascii code o a lowercase letter - 87 = value in base 10
+                digit = ord(digit) - 87         # ascii code to a lowercase letter - 87 = value in base 10
             digit_list.append(digit)
         return digit_list
 
@@ -54,6 +69,8 @@ class Number:
             else:
                 value += str(digit)
         value = value.lstrip('0')
+        if value == "":
+            value = "0"
         return value.upper()
 
 

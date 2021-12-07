@@ -38,6 +38,9 @@ class Operations:
         num2 = Number(base, num2)
         result = list()
 
+        if Number.greater(num2, num1):
+            raise Exception("X has to be greater or equal than Y!")
+
         if len(num2) < len(num1):
             num2.extend_number(abs(len(num2) - len(num1)))
 
@@ -85,6 +88,9 @@ class Operations:
         num2 = Number(base, num2)
         result = list()
 
+        if num2.value == "0":
+            raise Exception("Can not divide by 0!")
+
         for index in reversed(range(0, len(num1))):
             div = borrow * base + num1[index]
             borrow = div % num2[0]
@@ -94,5 +100,3 @@ class Operations:
         result = Number(base, result)
         return result, borrow
         # return f"{Number.create_value(result, False)}    r: {borrow}"
-
-# todo: make a validation for substraction that ensures that the second number is smaller than the first one?
