@@ -54,11 +54,19 @@ class NumberTest:
         number = Number("16", "FABCDE12")
         assert number.create_value(number.digit_list) == "FABCDE12"
 
+    @staticmethod
+    def test_split_in_chunks():
+        number = Number("2", "100010011010100101")
+        assert number.split_in_chunks(4) == ["0101", "1010", "0110", "0010","10"]
+        assert number.split_in_chunks(3) == ["101", "100", "010", "011","010", "100"]
+        assert number.split_in_chunks(2) == ["01", "01", "10", "10", "10", "01", "10", "00", "10"]
+
     def test_handler(self):
         self.test_create_digit_list()
         self.test_eq()
         self.test_create_value()
         self.test_greater()
+        self.test_split_in_chunks()
 
 class ValidationTest:
 
@@ -233,7 +241,11 @@ class ConversionsTest:
         pass
 
     def test_rapid_conversion_method(self):
-        pass
+        assert self.conversions.rapid_conversion_method("8","1234567", "16") == "53977"
+        assert self.conversions.rapid_conversion_method("16","abc123fd", "8") == "25360221775"
+        assert self.conversions.rapid_conversion_method("2", "10000001101100", "2") == "10000001101100"
+        assert self.conversions.rapid_conversion_method("2", "10000001101100", "4") == "2001230"
+        assert self.conversions.rapid_conversion_method("4", "32112311123123312313133212311231", "16") == "E5B56DBDB77E6D6D"
 
     def test_handler(self):
         self.test_successive_division_method()
