@@ -137,7 +137,7 @@ class UI:
                     data = self.get_conversion_input()
                     print(self.__conversions.substitution_method(*data))
                 elif command == "3":    # 10 as intermediate base
-                    data - self.get_conversion_input()
+                    data = self.get_conversion_input()
                     print(self.__conversions.intermediate_base_method(*data))
                 elif command == "4":    # Rapid conversion method
                     data = self.get_rapid_conversion_input()

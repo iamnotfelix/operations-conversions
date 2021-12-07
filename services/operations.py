@@ -69,6 +69,9 @@ class Operations:
             num1 = num2
             num2 = aux
 
+        if len(num2) > 1:
+            raise Exception("Can only multiply with a digit!")
+
         for index in range(0, len(num1)):
             mul = carry + num1[index] * num2[0]
             carry = mul // base
@@ -90,6 +93,9 @@ class Operations:
 
         if num2.value == "0":
             raise Exception("Can not divide by 0!")
+        
+        if len(num2) > 1:
+            raise Exception("Can only divide by a digit!")
 
         for index in reversed(range(0, len(num1))):
             div = borrow * base + num1[index]
