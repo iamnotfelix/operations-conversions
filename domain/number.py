@@ -73,8 +73,16 @@ class Number:
             value = "0"
         return value.upper()
 
-
-
-if __name__ == "__main__":
-    number = Number(16, "ABCDEF123")
-    print(number.digit_list)
+    def split_in_chunks(self, chunk_size):
+        chunks = []
+        chunk = ""
+        value = reversed(self.__value)
+        for i, digit in enumerate(value, start=1):
+            chunk += digit
+            if i % chunk_size == 0:
+                chunks.append(chunk[::-1])
+                chunk = ""
+        
+        if len(chunk):
+            chunks.append(chunk[::-1])
+        return chunks

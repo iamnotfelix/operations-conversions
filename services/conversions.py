@@ -1,6 +1,7 @@
 
 
 from domain.number import Number
+from math import log2
 
 
 class Conversions:
@@ -41,10 +42,42 @@ class Conversions:
         return result
 
     def intermediate_base_method(self, source_base, number, destination_base):
-        pass
+        if int(destination_base) > 10:
+            pass
+            result = self.successive_division_method(source_base, number, "10")
+            pass
+        else:
+            pass
 
     def rapid_conversion_method(self, source_base, number, destination_base):
-        pass
+        base_2 = { "0000": "0", "0001": "1", "0010": "2", "0011": "3", "0100": "4", "0101": "5", "0110": "6", "0111": "7", 
+                "1000": "8", "1001": "9", "1010": "A", "1011": "B", "1100": "C", "1101": "D", "1110": "E", "1111": "F" }
+
+        to_base_2 = { "0": "0", "1": "1", "2": "10", "3": "11", "4": "100", "5": "101", "6": "110", "7": "111",
+                 "8": "1000", "9": "1001", "A": "1010", "B": "1011", "C": "1100", "D": "1101", "E": "1110", "F": "1111" }
+
+        in_base_2 = ""
+        chunk_size = int(log2(int(source_base)))
+        for digit in number:
+            chunk = to_base_2[digit.upper()]
+            chunk = "0" * (chunk_size - len(chunk)) + chunk
+            in_base_2 += chunk
+
+        chunk_size = int(log2(int(destination_base)))
+        number = Number(source_base, in_base_2)
+        chunks = number.split_in_chunks(chunk_size)
+
+        for i in range(0, len(chunks)):
+            chunks[i] = "0" * (4 - len(chunks[i])) + chunks[i]
+
+        result = ""
+        for chunk in chunks:
+            result += base_2[chunk]
+        
+        result = result[::-1]
+        result = result.lstrip("0")
+        return result
+
 
 # todo: source_base has to be lower than the destination base for successive division
 # the successive_division does not work with two bases that are both over 10. so i need to implement that?

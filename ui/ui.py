@@ -73,7 +73,7 @@ class UI:
         self.__validator.validate_number(source_base, number)
 
         destination_base = input("Enter the destination base: ")
-        self.__validator.validte_rapid_base(destination_base)
+        self.__validator.validate_rapid_base(destination_base)
 
         return source_base, number, destination_base
     
@@ -182,3 +182,4 @@ class UI:
             self.main_command_handler()
 
 # todo: provide in the menu the bases that can be used and other info
+# provide info about the operation or conversions that is being executed, for ex. "succesive division source base > destination base"
